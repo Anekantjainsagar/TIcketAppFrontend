@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../Utils/index";
 
 const Login = () => {
   const history = useNavigate();
@@ -13,6 +15,76 @@ const Login = () => {
   const [phone, setPhone] = useState();
   const [scholar, setScholar] = useState();
   const [year, setYear] = useState("Year");
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+
+      script.onload = () => {
+        resolve(true);
+      };
+
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const displayRazorPay = async (amount) => {
+    const res = await loadScript(
+      `https://checkout.razorpay.com/v1/checkout.js`
+    );
+    if (!res) {
+      alert("You are offline");
+      return;
+    }
+
+    if (
+      phone &&
+      scholar &&
+      year &&
+      user.name &&
+      user.email &&
+      user.branch &&
+      user.enrollment
+    ) {
+      const options = {
+        key: "rzp_test_78Ke8bIZd8924J",
+        currency: "INR",
+        amount: amount * 100,
+        name: "Joyeux Fiesta",
+        description: "Get the pass now",
+        handler: function (response) {
+          alert(response.razorpay_payment_id);
+          alert("Payment successful");
+          axios
+            .post(`${BASE_URL}/bookTicket`, {
+              ...user,
+              phone,
+              scholar,
+              year,
+              transactionId: response.razorpay_payment_id,
+            })
+            .then((res) => {
+              console.log(res);
+              if (res) {
+                history("/check-ticket");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        },
+      };
+
+      const paymentObj = new window.Razorpay(options);
+      paymentObj.open();
+    } else {
+      alert("Please fill all the details");
+    }
+  };
 
   return (
     <div
@@ -96,7 +168,12 @@ const Login = () => {
         placeholder="Enter your branch"
         className="my-1 text-center mobile:w-7/12 md:w-3/12 mx-auto border rounded-xl outline-none border-black px-2 py-1"
       />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 mobile:w-7/12 md:w-3/12 my-1 rounded-full">
+      <button
+        onClick={() => {
+          displayRazorPay(1);
+        }}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 mobile:w-7/12 md:w-3/12 my-1 rounded-full"
+      >
         Go for payment
       </button>
       <p
