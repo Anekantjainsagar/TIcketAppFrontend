@@ -62,10 +62,10 @@ const Login = () => {
           axios
             .post(`${BASE_URL}/bookTicket`, {
               ...user,
-              phone,
+              contact: phone,
               scholar,
               year,
-              transactionId: response.razorpay_payment_id,
+              transectionId: response.razorpay_payment_id,
             })
             .then((res) => {
               console.log(res);
