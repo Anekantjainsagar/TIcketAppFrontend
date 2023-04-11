@@ -97,11 +97,11 @@ const Login = () => {
         className="backdrop-blur-sm flex items-center flex-col justify-center"
         style={{
           width: "100vw",
-          height: "82vh",
+          height: "81vh",
         }}
       >
         <h1 className="font-bold text-2xl py-2 text-white">
-          Hurry up! Book Now...
+          Don't Wait, Book your Ticket Now...
         </h1>
         <input
           type="text"

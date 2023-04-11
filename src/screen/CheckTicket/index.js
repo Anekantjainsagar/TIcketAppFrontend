@@ -38,7 +38,7 @@ const CheckTicket = () => {
         className="backdrop-blur-sm flex items-center flex-col justify-center"
         style={{
           width: "100vw",
-          height: "82vh",
+          height: "81vh",
         }}
       >
         <h1 className="font-bold text-2xl py-2 text-white">
